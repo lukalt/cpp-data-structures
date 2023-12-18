@@ -1,7 +1,3 @@
-//
-// Created by lukas on 17.12.2023.
-//
-
 #include "bst.h"
 
 template<typename K, typename V>

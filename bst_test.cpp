@@ -1,6 +1,3 @@
-//
-// Created by lukas on 17.12.2023.
-//
 #include <gtest/gtest.h>
 #include "bst.h"
 

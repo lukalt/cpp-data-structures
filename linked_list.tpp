@@ -1,7 +1,3 @@
-//
-// Created by lukas on 16.12.2023.
-//
-
 template<typename T>
 void linked_list<T>::push_front(T val) {
     if(head == nullptr) {

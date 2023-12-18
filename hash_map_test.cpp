@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "hash_map.h"
+#include <sstream>
 
 int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
@@ -92,6 +93,24 @@ TEST(HashMap, TestEmpty) {
 
 }
 
+TEST(HashMap, TestCopy) {
+    hash_map<int, int> m;
+    m.put(1, 2);
+    m.put(3, 7);
+    m.put(13, 8);
+    m.put(7, 4);
+
+    hash_map<int,int> k(m);
+    ASSERT_EQ(m.size(), k.size());
+    for(auto [key, val] : m) {
+        ASSERT_EQ(val, k.get(key));
+    }
+    for(auto [key, val] : k) {
+        ASSERT_EQ(val, m.get(key));
+    }
+
+}
+
 TEST(HashMap, TestIterator) {
     hash_map<int, int> m;
     m.put(1, 2);
@@ -99,8 +118,43 @@ TEST(HashMap, TestIterator) {
     m.put(13, 8);
     m.put(7, 4);
 
-    for(auto x : m) {
-        std::cout << std::get<0>(x) << std::get<1>(x) << std::endl;
+    int count = 4;
+    for(auto [key,val] : m) {
+        if(key == 1) {
+            ASSERT_EQ(val, 2);
+        } else if(key == 3) {
+            ASSERT_EQ(val, 7);
+        } else if(key == 13) {
+            ASSERT_EQ(val, 8);
+        } else if(key == 7) {
+            ASSERT_EQ(val, 4);
+        } else {
+            ASSERT_TRUE(false); // unreachable
+        }
+
+        count--;
+    }
+    ASSERT_EQ(count, 0);
+}
+
+TEST(HashMap, TestPrint) {
+    {
+        hash_map<int, int> m;
+        m.put(1, 2);
+        m.put(3, 7);
+        m.put(13, 8);
+        m.put(7, 4);
+        std::stringstream ss;
+        ss << m;
+        ASSERT_EQ(ss.str(), "{1: 2, 3: 7, 13: 8, 7: 4}");
+    }
+
+    {
+        hash_map<int,int> m {};
+        std::stringstream ss;
+        ss << m;
+        ASSERT_EQ(ss.str(), "{}");
+
     }
 
 }

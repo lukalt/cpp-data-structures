@@ -1,7 +1,3 @@
-//
-// Created by lukas on 16.12.2023.
-//
-
 #ifndef DATA_STRUCTURES_HASH_MAP_H
 #define DATA_STRUCTURES_HASH_MAP_H
 #include <optional>
@@ -34,47 +30,24 @@ private:
     int hashKey(K key);
 
 public:
-    hash_map(int initialCapacity=10, float loadFactor=0.75) : capacity(initialCapacity), loadFactor(loadFactor) {
-        if(capacity < 1) {
-            throw std::invalid_argument("Capacity must be greater than 0.");
-        }
-        if(loadFactor <= 0 || loadFactor > 1) {
-            throw std::invalid_argument("load factor must be greater than 0 and at most 1.0");
-        }
-        data = new node*[initialCapacity];
-        for(int i = 0; i < capacity; i++) {
-            data[i] = nullptr;
-        }
-    }
+    hash_map(hash_map<K,V>& copy);
+
+    explicit hash_map(int initialCapacity=10, float loadFactor=0.75);
 
 class iterator : public std::iterator<std::input_iterator_tag, tuple<K,V>, long, const tuple<K,V>*, tuple<K,V>&> {
     private:
         const int capacity;
-        node** const data;
-        int index;
-        node* curr = nullptr;
+        node** data;
+        int nextIndex;
+        node* nextElement = nullptr;
+        node* output = nullptr;
+
     public:
-        explicit iterator(node** nodes, int capacity) : data(nodes), index(0), capacity(capacity) {
-            curr = nodes[0];
-        }
-        explicit iterator(node** nodes, int capacity, int index, node* curr) : data(nodes), index(index), curr(curr), capacity(capacity) {
+        explicit iterator(node**& data, int index, int capacity) : data(data), capacity(capacity), nextIndex(index), nextElement(nullptr) {
+            (*this)++;
         }
 
-        iterator& operator++() {
-            while(true) {
-                if(curr != nullptr && curr->next != nullptr) {
-                    curr = curr->next;
-                    return *this;
-                }
-                if(index >= capacity - 1) {
-                    index = capacity;
-                    curr = nullptr;
-                    return *this;
-                }
-                index++;
-                curr = data[index];
-            }
-        }
+        iterator& operator++();
 
         iterator operator++(int) {
             iterator ret = *this;
@@ -83,18 +56,15 @@ class iterator : public std::iterator<std::input_iterator_tag, tuple<K,V>, long,
         }
 
         bool operator==(iterator other) const {
-            if(index >= capacity && other.index >= other.capacity) {
-                return true;
-            }
-            return index == other.index && curr == other.curr;
+            return output == nullptr && other.output == nullptr && nextIndex >= capacity && other.nextIndex >= other.capacity;
         }
 
         bool operator!=(iterator other) const {
-            return index != other.index || curr != other.curr;
+            return !(*this == other);
         }
 
         tuple<K,V> operator*() const {
-            return std::make_tuple(curr->key, curr->val);
+            return std::make_tuple(output->key, output->val);
         }
     };
 
@@ -118,11 +88,11 @@ class iterator : public std::iterator<std::input_iterator_tag, tuple<K,V>, long,
     bool empty();
 
     iterator begin() {
-        return iterator(data, capacity);
+        return iterator(data, 0, capacity);
     }
 
     iterator end() {
-        return iterator(data, capacity, capacity, nullptr);
+        return iterator(data, capacity, capacity);
     }
 
     std::optional<V> get(K key);
@@ -131,13 +101,11 @@ class iterator : public std::iterator<std::input_iterator_tag, tuple<K,V>, long,
 
     V& operator[](K key);
 
+
 };
 
 template <typename K, typename V> requires is_hashable_t<K>
-std::ostream& operator<<(std::ostream& buf, hash_map<K, V>) {
-
-    return buf;
-}
+std::ostream& operator<<(std::ostream& buf, hash_map<K, V>& map);
 
 #include "hash_map.tpp"
 

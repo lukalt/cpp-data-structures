@@ -1,7 +1,3 @@
-//
-// Created by lukas on 17.12.2023.
-//
-
 #ifndef DATA_STRUCTURES_BST_H
 #define DATA_STRUCTURES_BST_H
 

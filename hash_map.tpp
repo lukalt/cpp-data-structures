@@ -1,8 +1,36 @@
-//
-// Created by lukas on 16.12.2023.
-//
+template<typename K, typename V> requires is_hashable_t<K>
+hash_map<K,V>:: hash_map(int initialCapacity, float loadFactor) : capacity(initialCapacity), loadFactor(loadFactor) {
+    if(capacity < 1) {
+        throw std::invalid_argument("Capacity must be greater than 0.");
+    }
+    if(loadFactor <= 0 || loadFactor > 1) {
+        throw std::invalid_argument("load factor must be greater than 0 and at most 1.0");
+    }
+    data = new node*[initialCapacity];
+    for(int i = 0; i < capacity; i++) {
+        data[i] = nullptr;
+    }
+}
 
-
+template<typename K, typename V> requires is_hashable_t<K>
+hash_map<K,V>::hash_map(hash_map<K,V>& copy) {
+    capacity = copy.capacity;
+    elements = copy.elements;
+    loadFactor = copy.loadFactor;
+    data = new node*[capacity];
+    for(int i = 0; i < capacity; i++) {
+        data[i] = nullptr;
+        node* curr = copy.data[i];
+        while(curr != nullptr) {
+            if(data[i] == nullptr) {
+                data[i] = new node(curr->key, curr->val);
+            } else {
+                data[i]->next = new node(curr->key, curr->val);
+            }
+            curr = curr->next;
+        }
+    }
+}
 template<typename K, typename V> requires is_hashable_t<K>
 int hash_map<K, V>::hashKey(K key) {
     return key % capacity;
@@ -147,4 +175,41 @@ V& hash_map<K, V>::operator[](K key) {
         return opt.value();
     }
     throw std::invalid_argument("Map does not contain key");
+}
+
+template <typename K, typename V> requires is_hashable_t<K>
+std::ostream& operator<<(std::ostream& buf, hash_map<K, V>& map) {
+
+    buf << "{";
+    bool first {true};
+    for(auto [key, val] : map) {
+        if(first) {
+            first = false;
+        } else {
+            buf << ", ";
+        }
+        buf << key << ": " << val;
+    }
+    buf << "}";
+    return buf;
+}
+
+
+template <typename K, typename V> requires is_hashable_t<K>
+hash_map<K, V>::iterator& hash_map<K,V>::iterator::operator++() {
+    while(true) {
+        if(nextElement != nullptr) {
+            output = nextElement;
+            nextElement = nextElement->next;
+            return *this;
+        }
+
+        if(nextIndex < capacity) {
+            nextElement = data[nextIndex];
+            nextIndex++;
+        } else {
+            output = nullptr;
+            return *this;
+        }
+    }
 }
