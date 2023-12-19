@@ -2,14 +2,8 @@
 #define DATA_STRUCTURES_HASH_MAP_H
 #include <optional>
 #include <tuple>
+#include "concepts.h"
 using std::tuple;
-
-template <typename T>
-concept is_hashable_t = requires(T t, T t2) {
-     t % 10;
-     t == t2;
-     t != t2;
-};
 
 template <typename K, typename V> requires is_hashable_t<K>
 class hash_map {

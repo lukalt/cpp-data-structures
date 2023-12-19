@@ -152,15 +152,11 @@ void bst<K, V>::insert(K key, V value) {
 template<typename K, typename V>
 requires is_comparable_v<K>
 std::optional<V> bst<K, V>::get(K key) {
-    node *curr = root;
-    while (curr != nullptr) {
-        if (curr->key == key) {
-            return {curr->value};
-        } else if (curr->key < key) {
-            curr = curr->right;
-        } else {
-            curr = curr->left;
-        }
+    node *curr;
+    node* parent;
+    findNode(key, &curr, &parent);
+    if(curr != nullptr) {
+        return {curr->value};
     }
     return {};
 }
@@ -178,20 +174,45 @@ V bst<K, V>::get(K key, V val) {
 template<typename K, typename V>
 requires is_comparable_v<K>
 std::optional<pair<K, V>> bst<K,V>::findSuccessor(K key) {
-    node* curr = root;
-    while(curr != nullptr) {
-
+    node* curr;
+    node* parent;
+    findNode(key, &curr, &parent);
+    if(curr == nullptr) {
+        return {};
     }
+
+    node* succ = curr->right;
+    while(succ->left != nullptr) {
+        succ = succ->left;
+    }
+    if(parent != nullptr && parent->key > key && parent->key < succ->key) {
+        return parent->toPair();
+    }
+    return succ->toPair();
 }
 
 template<typename K, typename V>
 requires is_comparable_v<K>
-void bst<K,V>::findNode(K key, node** node) {
-
+void bst<K,V>::findNode(K key, class node** node, class node** parent) {
+    auto curr = root;
+    *parent = nullptr;
+    while (curr != nullptr) {
+        if (curr->key == key) {
+            *node = curr;
+            return;
+        } else if (curr->key < key) {
+            *parent = curr;
+            curr = curr->right;
+        } else {
+            *parent = curr;
+            curr = curr->left;
+        }
+    }
+    *node = nullptr;
 }
 
 template<typename K, typename V>
 requires is_comparable_v<K>
 std::optional<pair<K, V>> findPredecessor(K key) {
-
+    return {};
 }

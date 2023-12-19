@@ -3,23 +3,16 @@
 
 #include <iostream>
 #include <type_traits>
-#include<iostream>
-
-template <typename T>
-concept printable_t = requires(T t, std::ostream& buf) {
-    buf << t;
-};
-
-template<typename T, typename I>
-concept iterable_t = requires(I i, T t) {
-    i.begin();
-    i.end();
-    *i.begin();
-    *i.end();
-};
+#include <iostream>
+#include "concepts.h"
 
 template <typename T>
 class linked_list {
+    /**
+     * Removes all elements in the list
+     */
+    void clear();
+
 private:
     struct node {
         node* next;
@@ -34,7 +27,14 @@ private:
     node* tail = nullptr;
     int listSize {0};
 
+    /**
+     * Returns the element at the provided index. Indexes start at 0.
+     * @param index index to search for
+     * @return value
+     */
+    T get(int index);
 public:
+
 class iterator : public std::iterator<std::input_iterator_tag, T, long, const T*, T&> {
 private:
     node* curr;
@@ -136,18 +136,6 @@ public:
      * @return True, iff. the element is in the list
      */
     bool contains(T val);
-
-    /**
-     * Returns the element at the provided index. Indexes start at 0.
-     * @param index index to search for
-     * @return value
-     */
-    T get(int index);
-
-    /**
-     * Removes all elements in the list
-     */
-    void clear();
 
     /**
      * Returns the current size of the list.

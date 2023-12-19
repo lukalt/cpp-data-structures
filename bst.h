@@ -6,16 +6,7 @@
 #include <utility>
 #include <tuple>
 #include <stack>
-
-template <typename T>
-concept is_comparable_v = requires(T t1, T t2) {
-    t1 < t2;
-    t1 <= t2;
-    t1 == t2;
-    t1 != t2;
-    t1 > t2;
-    t2 >= t1;
-};
+#include "concepts.h"
 
 using std::pair;
 
@@ -33,6 +24,10 @@ private:
             left = nullptr;
             right = nullptr;
         }
+
+        std::pair<K,V> toPair() {
+            return std::make_pair(this->key, this->value);;
+        }
     };
 
     node* root;
@@ -42,7 +37,7 @@ private:
 
     void clearSubtree(node* node);
 
-    void findNode(K key, node** node);
+    void findNode(K key, class node** node, class node** parent);
 
 public:
 
@@ -134,7 +129,7 @@ public:
             if(out == nullptr) {
                 throw std::invalid_argument("iterator in invalid state");
             }
-            return std::make_pair(out->key, out->value);
+            return out->toPair();
         }
     };
 
@@ -145,7 +140,24 @@ public:
     iterator end() {
         return iterator();
     }
+
 };
+
+template <typename K, typename V> requires is_comparable_v<K> and printable_t<K> and printable_t<V>
+std::ostream& operator<<(std::ostream& buf, bst<K,V>& tree) {
+    buf << "{";
+    bool first = true;
+    for(auto [key, val] : tree) {
+        if(first) {
+            first = false;
+        } else {
+            buf << ", ";
+        }
+        buf << key << ": " << val;
+    }
+    buf << "}";
+    return buf;
+}
 
 #include "bst.tpp"
 #endif //DATA_STRUCTURES_BST_H
