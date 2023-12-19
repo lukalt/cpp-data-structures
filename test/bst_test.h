@@ -1,11 +1,5 @@
 #include <gtest/gtest.h>
-#include "bst.h"
-
-
-int main(int argc, char** argv) {
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
+#include "../include/bst.h"
 
 #define ASSERT_VALID(tree) ASSERT_TRUE(tree.isValid() )
 
@@ -215,26 +209,26 @@ TEST_F(SampleBST, SucessorValueExistingParent) {
 }
 
 TEST_F(SampleBST, PredecessorNotExisting) {
-    auto succ = tree.findPredecessor(2);
-    ASSERT_FALSE(succ.has_value());
+    auto pred = tree.findPredecessor(2);
+    ASSERT_FALSE(pred.has_value());
 }
 
 TEST_F(SampleBST, PredecessorValueNotExisting) {
-    auto succ = tree.findPredecessor(3);
-    ASSERT_FALSE(succ.has_value());
+    auto pred = tree.findPredecessor(3);
+    ASSERT_FALSE(pred.has_value());
 }
 
 TEST_F(SampleBST, PredecessorValueExistingChild) {
-    auto succ = tree.findPredecessor(5);
-    ASSERT_TRUE(succ.has_value());
-    ASSERT_EQ(succ.value().first, 2);
-    ASSERT_EQ(succ.value().second, 0);
+    auto pred = tree.findPredecessor(5);
+    ASSERT_TRUE(pred.has_value());
+    ASSERT_EQ(pred.value().first, 2);
+    ASSERT_EQ(pred.value().second, 0);
 }
 TEST_F(SampleBST, PredecessorValueRoot) {
-    auto succ = tree.findPredecessor(22);
-    ASSERT_TRUE(succ.has_value());
-    ASSERT_EQ(succ.value().first, 20);
-    ASSERT_EQ(succ.value().second, 0);
+    auto pred = tree.findPredecessor(22);
+    ASSERT_TRUE(pred.has_value());
+    ASSERT_EQ(pred.value().first, 20);
+    ASSERT_EQ(pred.value().second, 0);
 }
 
 TEST_F(SampleBST, IteratorFull) {

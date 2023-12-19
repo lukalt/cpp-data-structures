@@ -1,25 +1,25 @@
-#include "bst.h"
+#include "../include/bst.h"
 
 template<typename K, typename V>
-requires is_comparable_v<K>
+requires comparable<K>
 int bst<K, V>::size() {
     return numElements;
 }
 
 template<typename K, typename V>
-requires is_comparable_v<K>
+requires comparable<K>
 bool bst<K, V>::empty() {
     return numElements == 0;
 }
 
 template<typename K, typename V>
-requires is_comparable_v<K>
+requires comparable<K>
 bool bst<K, V>::contains(K key) {
     return get(key).has_value();
 }
 
 template<typename K, typename V>
-requires is_comparable_v<K>
+requires comparable<K>
 void bst<K, V>::clearSubtree(node *node) {
     if (node == nullptr) {
         return;
@@ -30,7 +30,7 @@ void bst<K, V>::clearSubtree(node *node) {
 }
 
 template<typename K, typename V>
-requires is_comparable_v<K>
+requires comparable<K>
 void bst<K, V>::clear() {
     clearSubtree(root);
     root = nullptr;
@@ -38,7 +38,7 @@ void bst<K, V>::clear() {
 }
 
 template<typename K, typename V>
-requires is_comparable_v<K>
+requires comparable<K>
 void bst<K, V>::remove(K key) {
     node *curr = root;
     node *prev = nullptr;
@@ -94,7 +94,7 @@ void bst<K, V>::remove(K key) {
 }
 
 template<typename K, typename V>
-requires is_comparable_v<K>
+requires comparable<K>
 bool bst<K, V>::isValid(bst<K, V>::node *node, int min, bool minPresent, int max, bool maxPresent) {
     if (node == nullptr) {
         return true;
@@ -112,7 +112,7 @@ bool bst<K, V>::isValid(bst<K, V>::node *node, int min, bool minPresent, int max
 }
 
 template<typename K, typename V>
-requires is_comparable_v<K>
+requires comparable<K>
 bool bst<K, V>::isValid() {
     if (root == nullptr) {
         return true;
@@ -121,7 +121,7 @@ bool bst<K, V>::isValid() {
 }
 
 template<typename K, typename V>
-requires is_comparable_v<K>
+requires comparable<K>
 void bst<K, V>::insert(K key, V value) {
     node *curr = root;
     node *prev = nullptr;
@@ -150,7 +150,7 @@ void bst<K, V>::insert(K key, V value) {
 }
 
 template<typename K, typename V>
-requires is_comparable_v<K>
+requires comparable<K>
 std::optional<V> bst<K, V>::get(K key) {
     node *curr;
     node* parent;
@@ -162,7 +162,7 @@ std::optional<V> bst<K, V>::get(K key) {
 }
 
 template<typename K, typename V>
-requires is_comparable_v<K>
+requires comparable<K>
 V bst<K, V>::get(K key, V val) {
     std::optional<V> opt = get(key);
     if (opt.has_value()) {
@@ -172,7 +172,7 @@ V bst<K, V>::get(K key, V val) {
 }
 
 template<typename K, typename V>
-requires is_comparable_v<K>
+requires comparable<K>
 std::optional<pair<K, V>> bst<K,V>::findSuccessor(K key) {
     node* curr;
     node* parent;
@@ -199,7 +199,7 @@ std::optional<pair<K, V>> bst<K,V>::findSuccessor(K key) {
 }
 
 template<typename K, typename V>
-requires is_comparable_v<K>
+requires comparable<K>
 std::optional<pair<K, V>> bst<K,V>::findPredecessor(K key) {
     node* curr;
     node* parent;
@@ -223,7 +223,7 @@ std::optional<pair<K, V>> bst<K,V>::findPredecessor(K key) {
 }
 
 template<typename K, typename V>
-requires is_comparable_v<K>
+requires comparable<K>
 void bst<K,V>::findNode(K key, class node** node, class node** parent) {
     auto curr = root;
     *parent = nullptr;
@@ -243,7 +243,7 @@ void bst<K,V>::findNode(K key, class node** node, class node** parent) {
 }
 
 template<typename K, typename V>
-requires is_comparable_v<K>
+requires comparable<K>
 std::optional<pair<K, V>> findPredecessor(K key) {
     return {};
 }

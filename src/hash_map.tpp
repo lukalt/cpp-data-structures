@@ -1,4 +1,4 @@
-template<typename K, typename V> requires is_hashable_t<K>
+template<typename K, typename V> requires hashable<K>
 hash_map<K,V>:: hash_map(int initialCapacity, float loadFactor) : capacity(initialCapacity), loadFactor(loadFactor) {
     if(capacity < 1) {
         throw std::invalid_argument("Capacity must be greater than 0.");
@@ -12,7 +12,7 @@ hash_map<K,V>:: hash_map(int initialCapacity, float loadFactor) : capacity(initi
     }
 }
 
-template<typename K, typename V> requires is_hashable_t<K>
+template<typename K, typename V> requires hashable<K>
 hash_map<K,V>::hash_map(hash_map<K,V>& copy) {
     capacity = copy.capacity;
     elements = copy.elements;
@@ -31,12 +31,12 @@ hash_map<K,V>::hash_map(hash_map<K,V>& copy) {
         }
     }
 }
-template<typename K, typename V> requires is_hashable_t<K>
+template<typename K, typename V> requires hashable<K>
 int hash_map<K, V>::hashKey(K key) {
     return key % capacity;
 }
 
-template<typename K, typename V> requires is_hashable_t<K>
+template<typename K, typename V> requires hashable<K>
 V hash_map<K, V>::get(K key, V def) {
     int hash = hashKey(key);
     node* curr = data[hash];
@@ -49,7 +49,7 @@ V hash_map<K, V>::get(K key, V def) {
     return def;
 }
 
-template<typename K, typename V> requires is_hashable_t<K>
+template<typename K, typename V> requires hashable<K>
 std::optional<V> hash_map<K, V>::get(K key) {
     int hash = hashKey(key) % capacity;
     node* curr = data[hash];
@@ -62,17 +62,17 @@ std::optional<V> hash_map<K, V>::get(K key) {
     return {};
 }
 
-template<typename K, typename V> requires is_hashable_t<K>
+template<typename K, typename V> requires hashable<K>
 bool hash_map<K, V>::empty() {
     return elements == 0;
 }
 
-template<typename K, typename V> requires is_hashable_t<K>
+template<typename K, typename V> requires hashable<K>
 int hash_map<K, V>::size() {
     return elements;
 }
 
-template<typename K, typename V> requires is_hashable_t<K>
+template<typename K, typename V> requires hashable<K>
 void hash_map<K, V>::clear() {
     for(int i = 0; i < capacity; i++) {
         node* curr = data[i];
@@ -86,7 +86,7 @@ void hash_map<K, V>::clear() {
     elements = 0;
 }
 
-template<typename K, typename V> requires is_hashable_t<K>
+template<typename K, typename V> requires hashable<K>
 void hash_map<K, V>::remove(K key) {
 
     int hash = hashKey(key);
@@ -109,7 +109,7 @@ void hash_map<K, V>::remove(K key) {
     }
 }
 
-template<typename K, typename V> requires is_hashable_t<K>
+template<typename K, typename V> requires hashable<K>
 bool hash_map<K, V>::containsValue(V val) {
     if(elements == 0) {
         return false;
@@ -126,7 +126,7 @@ bool hash_map<K, V>::containsValue(V val) {
     return false;
 }
 
-template<typename K, typename V> requires is_hashable_t<K>
+template<typename K, typename V> requires hashable<K>
 bool hash_map<K, V>::containsKey(K key) {
     if(elements == 0) {
         return false;
@@ -144,7 +144,7 @@ bool hash_map<K, V>::containsKey(K key) {
     return false;
 }
 
-template<typename K, typename V> requires is_hashable_t<K>
+template<typename K, typename V> requires hashable<K>
 void hash_map<K, V>::put(K key, V val) {
     int hash = hashKey(key);
     node* curr = data[hash];
@@ -168,7 +168,7 @@ void hash_map<K, V>::put(K key, V val) {
     elements++;
 }
 
-template<typename K, typename V> requires is_hashable_t<K>
+template<typename K, typename V> requires hashable<K>
 V& hash_map<K, V>::operator[](K key) {
     std::optional<V> opt = get(key);
     if(opt.has_value()) {
@@ -177,7 +177,7 @@ V& hash_map<K, V>::operator[](K key) {
     throw std::invalid_argument("Map does not contain key");
 }
 
-template <typename K, typename V> requires is_hashable_t<K>
+template <typename K, typename V> requires hashable<K>
 std::ostream& operator<<(std::ostream& buf, hash_map<K, V>& map) {
 
     buf << "{";
@@ -195,7 +195,7 @@ std::ostream& operator<<(std::ostream& buf, hash_map<K, V>& map) {
 }
 
 
-template <typename K, typename V> requires is_hashable_t<K>
+template <typename K, typename V> requires hashable<K>
 hash_map<K, V>::iterator& hash_map<K,V>::iterator::operator++() {
     while(true) {
         if(nextElement != nullptr) {

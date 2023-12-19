@@ -5,7 +5,7 @@
 #include "concepts.h"
 using std::tuple;
 
-template <typename K, typename V> requires is_hashable_t<K>
+template <typename K, typename V> requires hashable<K>
 class hash_map {
 private:
     int capacity;
@@ -98,9 +98,9 @@ class iterator : public std::iterator<std::input_iterator_tag, tuple<K,V>, long,
 
 };
 
-template <typename K, typename V> requires is_hashable_t<K>
+template <typename K, typename V> requires hashable<K>
 std::ostream& operator<<(std::ostream& buf, hash_map<K, V>& map);
 
-#include "hash_map.tpp"
+#include "../src/hash_map.tpp"
 
 #endif //DATA_STRUCTURES_HASH_MAP_H

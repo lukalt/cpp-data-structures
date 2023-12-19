@@ -1,14 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "linked_list.h"
+#include "../include/linked_list.h"
 
 #include <vector>
-
-int main(int argc, char** argv) {
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
-
 
 TEST(LinkedList, TestSize) {
     linked_list<int> list;

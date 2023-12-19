@@ -10,7 +10,7 @@
 
 using std::pair;
 
-template <typename K, typename V> requires is_comparable_v<K>
+template <typename K, typename V> requires comparable<K>
 class bst {
 private:
     class node {
@@ -143,7 +143,7 @@ public:
 
 };
 
-template <typename K, typename V> requires is_comparable_v<K> and printable_t<K> and printable_t<V>
+template <typename K, typename V> requires comparable<K> and printable<K> and printable<V>
 std::ostream& operator<<(std::ostream& buf, bst<K,V>& tree) {
     buf << "{";
     bool first = true;
@@ -159,5 +159,5 @@ std::ostream& operator<<(std::ostream& buf, bst<K,V>& tree) {
     return buf;
 }
 
-#include "bst.tpp"
+#include "../src/bst.tpp"
 #endif //DATA_STRUCTURES_BST_H

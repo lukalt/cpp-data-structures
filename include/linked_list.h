@@ -8,10 +8,6 @@
 
 template <typename T>
 class linked_list {
-    /**
-     * Removes all elements in the list
-     */
-    void clear();
 
 private:
     struct node {
@@ -27,12 +23,6 @@ private:
     node* tail = nullptr;
     int listSize {0};
 
-    /**
-     * Returns the element at the provided index. Indexes start at 0.
-     * @param index index to search for
-     * @return value
-     */
-    T get(int index);
 public:
 
 class iterator : public std::iterator<std::input_iterator_tag, T, long, const T*, T&> {
@@ -78,7 +68,7 @@ public:
      * @param iterator
      * @param dummy
      */
-    template<typename I> requires iterable_t<T, I>
+    template<typename I> requires iterable<T, I>
     explicit linked_list(I iterator) {
         for(auto& x : iterator) {
             push_back(x);
@@ -99,12 +89,18 @@ public:
      * Creates a new linked list and initialize it with a single element
      * @param val value to initialize with
      */
-    linked_list(T val);
+    explicit linked_list(T val);
 
     /**
      * Destructs the list and frees all allocated memory
      */
     ~linked_list();
+
+
+    /**
+     * Removes all elements in the list
+     */
+    void clear();
 
     /**
      * Inserts an element at the beginning of the list
@@ -138,12 +134,19 @@ public:
     bool contains(T val);
 
     /**
+     * Returns the element at the provided index. Indexes start at 0.
+     * @param index index to search for
+     * @return value
+     */
+    T get(int index);
+
+    /**
      * Returns the current size of the list.
      * @return size of the list
      */
-    int size() const;
+    [[nodiscard]] int size() const;
 
-    bool empty() const;
+    [[nodiscard]] bool empty() const;
 
     bool operator==(const linked_list<T>& other) const;
 
@@ -164,7 +167,7 @@ linked_list<T> make_linked_list(std::initializer_list<T> initializerList) {
 }
 
 
-template <printable_t T>
+template <printable T>
 std::ostream& operator<<(std::ostream& buf, linked_list<T>& list) {
     buf << '[';
     bool first = true;
@@ -181,4 +184,4 @@ std::ostream& operator<<(std::ostream& buf, linked_list<T>& list) {
 }
 #endif //DATA_STRUCTURES_LINKED_LIST_H
 
-#include "linked_list.tpp"
+#include "../src/linked_list.tpp"

@@ -1,12 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "hash_map.h"
+#include "../include/hash_map.h"
 #include <sstream>
-
-int main(int argc, char** argv) {
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
 
 TEST(HashMap, GeneralTest) {
     hash_map<int, int> m;
