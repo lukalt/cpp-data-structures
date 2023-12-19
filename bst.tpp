@@ -181,12 +181,43 @@ std::optional<pair<K, V>> bst<K,V>::findSuccessor(K key) {
         return {};
     }
 
+    if(curr->right == nullptr) {
+        if(parent != nullptr && parent->key > key) {
+            return parent->toPair();
+        } else {
+            return {};
+        }
+    }
     node* succ = curr->right;
     while(succ->left != nullptr) {
         succ = succ->left;
     }
-    if(parent != nullptr && parent->key > key && parent->key < succ->key) {
+    if(parent != nullptr && parent->key > succ->key) {
         return parent->toPair();
+    }
+    return succ->toPair();
+}
+
+template<typename K, typename V>
+requires is_comparable_v<K>
+std::optional<pair<K, V>> bst<K,V>::findPredecessor(K key) {
+    node* curr;
+    node* parent;
+    findNode(key, &curr, &parent);
+    if(curr == nullptr) {
+        return {};
+    }
+
+    if(curr->left == nullptr) {
+        if(root != nullptr && root->key < key) {
+            return root->toPair();
+        } else {
+            return {};
+        }
+    }
+    node* succ = curr->left;
+    while(succ->right != nullptr) {
+        succ = succ->right;
     }
     return succ->toPair();
 }

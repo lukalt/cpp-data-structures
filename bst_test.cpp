@@ -125,13 +125,6 @@ TEST_F(SampleBST, Clear) {
     ASSERT_VALID(tree);
 }
 
-TEST_F(EmptyBST, IteratorEmpty) {
-    ASSERT_TRUE(tree.empty());
-    for(auto [key,val] : tree) {
-        ASSERT_FALSE(true);
-    }
-}
-
 TEST_F(EmptyBST, InorderPrintEmpty) {
     std::stringstream ss;
     ss << tree;
@@ -140,7 +133,108 @@ TEST_F(EmptyBST, InorderPrintEmpty) {
 TEST_F(SampleBST, InorderPrintSample) {
     std::stringstream ss;
     ss << tree;
-    ASSERT_EQ(ss.str(), "{2: 0,5: 0,7: 0,10: 0,12: 0,15: 0,17: 0,20: 0,22: 0,25: 0,27: 0,30: 0,32: 0,35: 0,37: 0}");
+    ASSERT_EQ(ss.str(), "{2: 0, 5: 0, 7: 0, 10: 0, 12: 0, 15: 0, 17: 0, 20: 0, 22: 0, 25: 0, 27: 0, 30: 0, 32: 0, 35: 0, 37: 0}");
+}
+
+TEST_F(EmptyBST, InsertRoot) {
+    tree.insert(1, 1);
+
+    ASSERT_EQ(tree.get(1), 1);
+    ASSERT_EQ(tree.size(), 1);
+    ASSERT_VALID(tree);
+}
+
+TEST_F(SampleBST, InsertLeaf) {
+    tree.insert(40, 1337);
+    ASSERT_EQ(tree.get(40), 1337);
+    ASSERT_EQ(tree.size(), initialSize + 1);
+    ASSERT_VALID(tree);
+}
+
+TEST_F(EmptyBST, EmptyContains) {
+    ASSERT_FALSE(tree.contains(1));
+    ASSERT_FALSE(tree.contains(0));
+}
+
+TEST_F(SampleBST, ContainsExisting) {
+    ASSERT_TRUE(tree.contains(5));
+    ASSERT_TRUE(tree.contains(10));
+    ASSERT_TRUE(tree.contains(37));
+}
+
+TEST_F(SampleBST, ContainsNonExisting) {
+    ASSERT_FALSE(tree.contains(6));
+    ASSERT_FALSE(tree.contains(-11));
+    ASSERT_FALSE(tree.contains(1337));
+}
+
+TEST_F(SampleBST, GetOptionalPresent) {
+    auto x = tree.get(10);
+    ASSERT_TRUE(x.has_value());
+    ASSERT_EQ(x.value(), 0);
+}
+TEST_F(SampleBST, GetOptionalNotPresent) {
+    auto x = tree.get(11);
+    ASSERT_FALSE(x.has_value());
+}
+TEST_F(SampleBST, GetDefaultPresent) {
+    ASSERT_EQ(tree.get(10, 0), 0);
+}
+TEST_F(SampleBST, GetDefaultNotPresent) {
+    ASSERT_EQ(tree.get(11, 1337), 1337);
+}
+
+TEST_F(EmptyBST, IteratorEmpty) {
+    ASSERT_TRUE(tree.empty());
+    for(auto [key,val] : tree) {
+        ASSERT_FALSE(true);
+    }
+}
+
+TEST_F(SampleBST, SuccessorNotExisting) {
+    auto succ = tree.findSuccessor(37);
+    ASSERT_FALSE(succ.has_value());
+}
+
+TEST_F(SampleBST, SucessorValueNotExisting) {
+    auto succ = tree.findSuccessor(13);
+    ASSERT_FALSE(succ.has_value());
+}
+
+TEST_F(SampleBST, SucessorValueExistingChild) {
+    auto succ = tree.findSuccessor(30);
+    ASSERT_TRUE(succ.has_value());
+    ASSERT_EQ(succ.value().first, 32);
+    ASSERT_EQ(succ.value().second, 0);
+}
+TEST_F(SampleBST, SucessorValueExistingParent) {
+    auto succ = tree.findSuccessor(32);
+    ASSERT_TRUE(succ.has_value());
+    ASSERT_EQ(succ.value().first, 35);
+    ASSERT_EQ(succ.value().second, 0);
+}
+
+TEST_F(SampleBST, PredecessorNotExisting) {
+    auto succ = tree.findPredecessor(2);
+    ASSERT_FALSE(succ.has_value());
+}
+
+TEST_F(SampleBST, PredecessorValueNotExisting) {
+    auto succ = tree.findPredecessor(3);
+    ASSERT_FALSE(succ.has_value());
+}
+
+TEST_F(SampleBST, PredecessorValueExistingChild) {
+    auto succ = tree.findPredecessor(5);
+    ASSERT_TRUE(succ.has_value());
+    ASSERT_EQ(succ.value().first, 2);
+    ASSERT_EQ(succ.value().second, 0);
+}
+TEST_F(SampleBST, PredecessorValueRoot) {
+    auto succ = tree.findPredecessor(22);
+    ASSERT_TRUE(succ.has_value());
+    ASSERT_EQ(succ.value().first, 20);
+    ASSERT_EQ(succ.value().second, 0);
 }
 
 TEST_F(SampleBST, IteratorFull) {
